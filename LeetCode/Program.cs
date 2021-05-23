@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.ExceptionServices;
@@ -7,17 +8,55 @@ using System.Threading.Tasks;
 
 namespace LeetCode
 {
+    
     class Program
     {
         static void Main(string[] args)
         {
-            var op = ConvertToBase7(100);
-            Console.WriteLine(op);
+            IsPowerOfTwo(-2147483648);
 
             int z = 3;
            Console.ReadLine();
         }
-        
+
+        //https://leetcode.com/problems/missing-number/
+        //268. Missing Number
+        public static int MissingNumber(int[] nums)
+        {
+            return nums.Length * (nums.Length + 1) / 2 - nums.Sum();
+        }
+
+        //258. Add Digits
+        //https://leetcode.com/problems/add-digits/
+        public int AddDigits(int num)
+        {
+            if (num < 10) return num;
+            return AddDigits(num.ToString().Select(x => int.Parse(x.ToString())).Sum());
+        }
+
+        //242. Valid Anagram
+        //https://leetcode.com/problems/valid-anagram/
+        public static bool IsAnagram(string s, string t)
+        {
+            return s.Length == t.Length && s.OrderBy(x => x).ToList().SequenceEqual(t.OrderBy(x => x).ToList());
+        }
+
+        //231. Power of Two
+        //https://leetcode.com/problems/power-of-two/
+        public static bool IsPowerOfTwo(int n)
+        {
+            if (n == int.MinValue) return false;
+            var b = (new BitArray(new int[] {n}));
+            var cnt = 0;
+            for (int i = 0; i < b.Length; i++)
+            {
+                if (b[i]) cnt++;
+            }
+
+            return cnt == 1;
+        }
+
+
         #region Solved
         public static string ConvertToBase7(int num)
         {
