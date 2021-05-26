@@ -13,10 +13,120 @@ namespace LeetCode
     {
         static void Main(string[] args)
         {
-            IsPowerOfTwo(-2147483648);
+            LengthOfLastWord("b a ");
 
             int z = 3;
            Console.ReadLine();
+        }
+
+        //https://leetcode.com/problems/length-of-last-word/
+        //58. Length of Last Word
+        public static int LengthOfLastWord(string s)
+        {
+            var words = s.Split(new string[] {" "}, StringSplitOptions.RemoveEmptyEntries).Where(x => x.Length >= 1)
+                .ToList();
+            if (words.Count == 0)
+            {
+                s = s.Replace(" ", "");
+                return s.Length;
+            }
+            return words.Last().Length;
+        }
+
+        //https://leetcode.com/problems/long-pressed-name/
+        //925. Long Pressed Name
+        public static bool IsLongPressedName(string name, string typed)
+        {
+            if (name == typed) return true;
+            if (typed.Length < name.Length) return false;
+            if (typed[0] != name[0]) return false;
+
+            name += "~";
+            var nameDict = new Dictionary<int,string>();
+            int cnt = 1;
+            int index = 0;
+            for (int i = 1; i < name.Length; i++)
+            {
+                if (name[i] == name[i - 1])
+                {
+                    cnt++;
+                    continue;
+                }
+                nameDict.Add(index, name.Substring(i-cnt,cnt));
+                cnt = 1;
+                index++;
+            }
+
+            typed += "~";
+            var typedDict = new Dictionary<int, string>();
+            cnt = 1;
+            index = 0;
+            for (int i = 1; i < typed.Length; i++)
+            {
+                if (typed[i] == typed[i - 1])
+                {
+                    cnt++;
+                    continue;
+                }
+                typedDict.Add(index, typed.Substring(i - cnt, cnt));
+                cnt = 1;
+                index++;
+            }
+
+            if (nameDict.Count != typedDict.Count) return false;
+
+            for (int i = 0; i < nameDict.Count; i++)
+            {
+                if (nameDict[i].Length > typedDict[i].Length) return false;
+                if (nameDict[i][0] != typedDict[i][0]) return false;
+            }
+
+            return true;
+        }
+
+        //507. Perfect Number
+        //https://leetcode.com/problems/perfect-number/
+        public static bool CheckPerfectNumber(int num)
+        {
+            if (num == 1) return true;
+
+            var sum = 1;
+            int j = 2;
+            while (j <= num/2)
+            {
+                if (num % j == 0)
+                {
+                    sum += j;
+                }
+                j++;
+            }
+
+            return num == sum;
+        }
+
+        //69. Sqrt(x)
+        //https://leetcode.com/problems/sqrtx/
+        public static int MySqrt(int x)
+        {
+            if (x == 1) return 1;
+            long left = 1;
+            long right = int.MaxValue;
+            long res = -1;
+            while (left <= right)
+            {
+                long c = left + (right - left) / 2;
+                if (c * c <= x)
+                {
+                    res = c;
+                    left = c + 1;
+                }
+                else
+                {
+                    right = c - 1;
+                }
+            }
+
+            return (int) res;
         }
 
         //https://leetcode.com/problems/missing-number/
