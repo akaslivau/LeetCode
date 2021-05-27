@@ -13,11 +13,57 @@ namespace LeetCode
     {
         static void Main(string[] args)
         {
-            LengthOfLastWord("b a ");
+            PlusOne(new int[]{9,9,9});
 
             int z = 3;
            Console.ReadLine();
         }
+
+        //https://leetcode.com/problems/plus-one/
+        //66. Plus One
+        public static int[] PlusOne(int[] digits)
+        {
+            var n = digits.Length;
+            if(n==1 && digits[0]==9) return new int[]{1,0};
+            if (digits[n - 1] < 9)
+            {
+                digits[n - 1]++;
+                return digits;
+            }
+
+            digits[n - 1] = 0;
+            return PlusOne(digits.Take(n - 1).ToArray()).Concat(new int[] {0}).ToArray();
+        }
+
+        //https://leetcode.com/problems/check-if-binary-string-has-at-most-one-segment-of-ones/
+        //1784. Check if Binary String Has at Most One Segment of Ones
+        public static bool CheckOnesSegment(string s)
+        {
+            return s.Split(new[] {"0"}, StringSplitOptions.RemoveEmptyEntries).Count() == 1;
+        }
+
+        //https://leetcode.com/problems/word-pattern/
+        //290. Word Pattern
+        public static bool WordPattern(string pattern, string s)
+        {
+            var d = new Dictionary<char,string>();
+            var words = s.Split(new[] {" "}, StringSplitOptions.RemoveEmptyEntries);
+            if (words.Length < pattern.Length) return false;
+
+            for (int i = 0; i < pattern.Length; i++)
+            {
+                if (!d.ContainsKey(pattern[i]))
+                {
+                    if (d.Any(x => x.Value == words[i])) return false;
+                    d.Add(pattern[i], words[i]);
+                }
+
+                if (d[pattern[i]] != words[i]) return false;
+            }
+            
+            return true;
+        }
+
 
         //https://leetcode.com/problems/length-of-last-word/
         //58. Length of Last Word
