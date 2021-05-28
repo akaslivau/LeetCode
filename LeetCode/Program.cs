@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.ExceptionServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace LeetCode
@@ -13,10 +14,120 @@ namespace LeetCode
     {
         static void Main(string[] args)
         {
-            PlusOne(new int[]{9,9,9});
+            var op = new int[3][];
+            op[0] = new int[]{2,1};
+            op[1] = new int[] { 4, 2 };
+            op[2] = new int[] { 6, 3 };
+            CheckStraightLine(op);
+
+            /*            while (true)
+                        {
+
+                            int o = int.Parse(Console.ReadLine());
+                            var res = IsPowerOfThree(o);
+                            Console.WriteLine(res);
+                        }*/
+
 
             int z = 3;
            Console.ReadLine();
+        }
+
+        //https://leetcode.com/problems/check-if-it-is-a-straight-line/
+        //1232. Check If It Is a Straight Line
+        public static bool CheckStraightLine(int[][] coordinates)
+        {
+            if (coordinates.Length == 2) return true;
+            if (coordinates.Select(x => x[0]).All(x => x == coordinates[0][0])) return true;
+            if (coordinates.Select(x => x[1]).All(x => x == coordinates[0][1])) return true;
+
+            var pointList = coordinates.Select(x => new {X = x[0], Y = x[1]}).ToList();
+            pointList = pointList.OrderBy(x => x.X).ToList();
+
+            var slope = (decimal)(pointList.Last().Y - pointList.First().Y) / (pointList.Last().X - pointList.First().X);
+            var b = pointList.First().Y - slope * pointList.First().X;
+
+            return !(from p in pointList let y = slope * p.X + b where y != p.Y select p).Any();
+        }
+
+        //https://leetcode.com/problems/search-insert-position/
+        //35. Search Insert Position
+        public static int SearchInsert(int[] nums, int target)
+        {
+            if (nums.Contains(target)) return nums.ToList().IndexOf(target);
+            if (target > nums.Max()) return nums.Length;
+            if (target < nums.Min()) return 0;
+
+            return nums.ToList().FindIndex(x => x > target);
+        }
+
+        //https://leetcode.com/problems/detect-pattern-of-length-m-repeated-k-or-more-times/
+        //1566. Detect Pattern of Length M Repeated K or More Times
+        public static bool ContainsPattern(int[] arr, int m, int k)
+        {
+            var s = arr.Aggregate("", (current, i) => current + i);
+
+            var cached = new List<string>();
+            for (int i = m; i < arr.Length; i++)
+            {
+                var substring = arr.Skip(i - m).Take(m).Aggregate("", (c, j) => c + j);
+                if (cached.Contains(substring)) continue;
+                cached.Add(substring);
+
+                if(s.IndexOf(substring)==-1) continue;
+
+
+                var index = 0;
+                int cnt = 0;
+                var copy = s;
+                while (index != -1 || copy.Length<substring.Length)
+                {
+                    index = copy.IndexOf(substring);
+                    if (index == -1) break;
+                    if (index == 0) cnt++; else cnt = 0;
+                    copy = index == 0 ? copy.Substring(substring.Length) : copy.Substring(index);
+                    if (cnt >= k) return true;
+                }
+            }
+
+            return false;
+        }
+
+        //326. Power of Three
+        //https://leetcode.com/problems/power-of-three/
+        public static bool IsPowerOfThree(int n)
+        {
+            if (n == 1) return true;
+            if (n < 3) return false;
+
+            while (n % 3 == 0)
+            {
+                n /= 3;
+            }
+
+            return n == 1;
+        }
+
+        //367. Valid Perfect Square
+        //https://leetcode.com/problems/valid-perfect-square/
+        public static bool IsPerfectSquare(int num)
+        {
+            if (num == 1) return true;
+
+            long left = 1;
+            long right = num;
+
+            while (left <= right)
+            {
+                long mid = left + (right - left) / 2;
+                var sq = mid * mid;
+                if (num == sq) return true;
+
+                if (num < sq) right = mid - 1;
+                else left = mid + 1;
+            }
+
+            return false;
         }
 
         //https://leetcode.com/problems/plus-one/
