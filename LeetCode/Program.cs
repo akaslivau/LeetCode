@@ -14,23 +14,94 @@ namespace LeetCode
     {
         static void Main(string[] args)
         {
-            var op = new int[3][];
-            op[0] = new int[]{2,1};
-            op[1] = new int[] { 4, 2 };
-            op[2] = new int[] { 6, 3 };
-            CheckStraightLine(op);
-
-            /*            while (true)
-                        {
-
-                            int o = int.Parse(Console.ReadLine());
-                            var res = IsPowerOfThree(o);
-                            Console.WriteLine(res);
-                        }*/
-
-
-            int z = 3;
+            AngleClock(3, 30);
+           int z = 3;
            Console.ReadLine();
+        }
+
+        //https://leetcode.com/problems/angle-between-hands-of-a-clock/
+        //1344. Angle Between Hands of a Clock
+        public static double AngleClock(int hour, int minutes)
+        {
+            if (hour == 12) hour = 0;
+
+            var minuteVector = new[]
+                {
+                    Math.Sin((double) minutes / 60 * 2 * Math.PI),
+                    Math.Cos((double) minutes / 60 * 2 * Math.PI)
+                };
+
+            var hourVector = new double[]                
+            {
+                Math.Sin((hour + (double)minutes/60) / 12 * 2 * Math.PI),
+                Math.Cos((hour + (double)minutes/60) / 12 * 2 * Math.PI),
+            };
+
+            var res = Math.Acos(minuteVector.Zip(hourVector, (x, y) => x * y).Sum()) * 180 / Math.PI;
+            return res;
+        }
+
+        //https://leetcode.com/problems/maximum-subarray/
+        //53. Maximum Subarray
+        public static int MaxSubArray(int[] nums)
+        {
+            int maxSum = nums[0];
+            int curSum = maxSum;
+            for (int i = 1; i < nums.Length; i++)
+            {
+                curSum = Math.Max(nums[i], curSum + nums[i]);
+                if (curSum > maxSum) maxSum = curSum;
+            }
+
+            return maxSum;
+        }
+
+        //https://leetcode.com/problems/counting-bits/
+        //338. Counting Bits
+        public static int[] CountBits(int n)
+        {
+            if (n == 0) return new int[] {0};
+
+            var intRes = new int[n + 1];
+            intRes[0] = 0;
+
+            var bools = new bool[17];
+            for (int i = 1; i <= n; i++)
+            {
+                for (int j = 0; j < 17; j++)
+                {
+                    if (bools[j] == false)
+                    {
+                        bools[j] = true;
+                        intRes[i] = bools.Count(x => x == true);
+                        break;
+                    }
+                    else
+                    {
+                        bools[j] = false;
+                    }
+                }
+            }
+
+            return intRes;
+        }
+
+        //https://leetcode.com/problems/climbing-stairs/
+        //70. Climbing Stairs
+        public static int ClimbStairs(int n)
+        {
+            if (n == 1) return 1;
+            var dyn = new int[n + 1];
+            dyn[1] = 1;
+            dyn[2] = 2;
+
+
+            for (int i = 3; i <= n; i++)
+            {
+                dyn[i] = dyn[i - 2] + dyn[i - 1];
+            }
+
+            return dyn[n];
         }
 
         //https://leetcode.com/problems/check-if-it-is-a-straight-line/
