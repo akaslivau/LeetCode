@@ -14,9 +14,127 @@ namespace LeetCode
     {
         static void Main(string[] args)
         {
-            AngleClock(3, 30);
-           int z = 3;
+            NumSplits("aacaba");
            Console.ReadLine();
+        }
+
+        //https://leetcode.com/problems/number-of-good-ways-to-split-a-string/
+        //1525. Number of Good Ways to Split a String
+        public static int NumSplits(string s)
+        {
+            int cnt = 0;
+
+            var d = new Dictionary<char, int>();
+            for (int i = 0; i < s.Length; i++)
+            {
+                if (!d.ContainsKey(s[i])) d.Add(s[i], 1);
+                else d[s[i]]++;
+            }
+            
+            var d2 = new Dictionary<char, int>();
+            for (int i = 0; i < s.Length; i++)
+            {
+                if (!d2.ContainsKey(s[i])) d2.Add(s[i], 1); else d2[s[i]]++;
+                d[s[i]]--;
+                if (d[s[i]] <= 0) d.Remove(s[i]);
+
+                if (d2.Count == d.Count) cnt++;
+            }
+
+            return cnt;
+        }
+
+        //1652. Defuse the Bomb
+        //https://leetcode.com/problems/defuse-the-bomb/
+        public static int[] Decrypt(int[] code, int k)
+        {
+            if (k == 0) return code.Select(x => 0).ToArray();
+
+            int n = code.Length;
+            var res = new List<int>();
+
+            if (k < 0) Array.Reverse(code);
+
+            int i = 0;
+            while (i < n)
+            {
+                var cnt = Math.Abs(k);
+                var sum = 0;
+                while (cnt > 0)
+                {
+                    var index = (i + cnt) % n;
+                    sum += code[index];
+                    cnt--;
+                }
+                res.Add(sum);
+                i++;
+            }
+
+            if (k < 0) res.Reverse();
+
+            return res.ToArray();
+        }
+
+        //https://leetcode.com/problems/sum-of-even-numbers-after-queries/
+        //985. Sum of Even Numbers After Queries
+        public static int[] SumEvenAfterQueries(int[] nums, int[][] queries)
+        {
+            var res = new int[queries.Length];
+            var sum = nums.Where(x => x % 2 == 0).Sum();
+
+            for (int i = 0; i < queries.Length; i++)
+            {
+                var ind = queries[i][1];
+                var val = queries[i][0];
+                var oldVal = nums[ind];
+
+                var evenBefore = nums[ind] % 2 == 0;
+                nums[ind] += val;
+                var evenNow = nums[ind] % 2 == 0;
+
+                if (evenBefore && evenNow)
+                {
+                    sum += val;
+                }
+
+                if (!evenBefore && evenNow)
+                {
+                    sum += nums[ind];
+                }
+
+                if (evenBefore && !evenNow)
+                {
+                    sum -= oldVal;
+                }
+                
+                res[i] = sum;
+
+            }
+            return res;
+        }
+
+        //https://leetcode.com/problems/reformat-date/
+        //1507. Reformat Date
+        public static string ReformatDate(string date)
+        {
+            var splitted = date.Split(new string[] {" "}, StringSplitOptions.None);
+            var day = int.Parse(new string(splitted[0].Where(Char.IsDigit).ToArray()));
+            var newDate = DateTime.Parse(day + "-" + splitted[1] + "-" + splitted[2]);
+            return newDate.ToString("yyyy-MM-dd");
+        }
+
+        //https://leetcode.com/problems/water-bottles/
+        //1518. Water Bottles
+        public static int NumWaterBottles(int numBottles, int numExchange)
+        {
+            var res = numBottles;
+            while (numBottles >= numExchange)
+            {
+                res += numBottles / numExchange;
+                numBottles = numBottles / numExchange + (numBottles % numExchange);
+            }
+
+            return res;
         }
 
         //https://leetcode.com/problems/angle-between-hands-of-a-clock/
