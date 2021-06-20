@@ -104,15 +104,7 @@ namespace LeetCode
 
         static void Main(string[] args)
         {
-            var a1 = new int?[] {1, 3, 2, 5};
-            var a2 = new int?[] {2, 1, 3, null, 4, null, 7};
-
-            var r1 = ConvertArrayToTree(a1);
-            var r2 = ConvertArrayToTree(a2);
-            var op = MergeTrees(r1, r2);
-
-            int z = 3;
-            Console.ReadLine();
+            HalvesAreAlike("textbook");
         }
 
 
@@ -223,6 +215,54 @@ namespace LeetCode
         }
 
         #endregion
+
+        //1252. Cells with Odd Values in a Matrix
+        //https://leetcode.com/problems/cells-with-odd-values-in-a-matrix/
+        public int OddCells(int m, int n, int[][] indices)
+        {
+            var r = new bool[m];
+            var c = new bool[n];
+            foreach (var item in indices)
+            {
+                r[item[0]] = !r[item[0]];
+                c[item[1]] = !c[item[1]];
+            }
+            return r.Count(x => !x) * c.Count(x => x) + r.Count(x => x) * c.Count(x => !x);
+
+        }
+
+        //1704. Determine if String Halves Are Alike
+        //https://leetcode.com/problems/determine-if-string-halves-are-alike/
+        public static bool HalvesAreAlike(string s)
+        {
+            s = s.ToLower();
+            var vowels = new char[] { 'a', 'e', 'i', 'o', 'u' };
+
+            var s1 = s.Substring(0, s.Length / 2);
+            var s2 = s.Substring(s.Length / 2, s.Length / 2);
+            
+            return s1.Count(x => vowels.Contains(x)) == s2.Count(x => vowels.Contains(x));
+        }
+
+        //832. Flipping an Image
+        //https://leetcode.com/problems/flipping-an-image/
+        public int[][] FlipAndInvertImage(int[][] image)
+        {
+            var result = new int[image.Length][];
+            var d = new Dictionary<int, int> {{0, 1}, {1, 0}};
+            for (int i = 0; i < image.Length; i++)
+            {
+                var row = new List<int>();
+                var a = image[i];
+                for (int j = a.Length - 1; j >= 0; j--)
+                {
+                    row.Add(d[a[j]]);
+                }
+                result[i] = row.ToArray();
+            }
+
+            return result;
+        }
 
 
         //101. Symmetric Tree
