@@ -104,6 +104,8 @@ namespace LeetCode
 
         static void Main(string[] args)
         {
+            var tst = new Interesting();
+            return;
             HalvesAreAlike("textbook");
         }
 
